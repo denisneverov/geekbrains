@@ -26,6 +26,8 @@ public class Main {
                 boolean isEquals = enteredNumber == puzzledNumber;
 
                 if (isEquals || countAttempts == 3) {
+                    System.out.println("Число " + (isEquals ? "" : "не ") + "угадано - " + puzzledNumber);
+
                     isContinue = isContinue();
                     if (isContinue) {
                         puzzledNumber = new Random().nextInt(maxBound - minBound + 1) + minBound;
