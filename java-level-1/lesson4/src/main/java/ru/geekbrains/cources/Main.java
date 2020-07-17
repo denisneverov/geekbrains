@@ -7,7 +7,8 @@ public class Main {
     public static Scanner sc = new Scanner(System.in);
 
     public static char[][] map;
-    public final static int SIZE = 3;
+    public final static int SIZE = 5;
+    public final static int COUNT_SYMBOLS = 4;
 
     public final static char DOT_X = 'X';
     public final static char DOT_O = 'O';
@@ -19,7 +20,7 @@ public class Main {
         while (true) {
             humanTurn();
             printMap();
-            if (isWin(DOT_X)) {
+            if (isWinIntelligent(DOT_X)) {
                 System.out.println("YOU WIN!");
                 break;
             }
@@ -29,7 +30,7 @@ public class Main {
             }
             aITurn();
             printMap();
-            if (isWin(DOT_O)) {
+            if (isWinIntelligent(DOT_O)) {
                 System.out.println("YOU LOSE(((((((!");
                 break;
             }
@@ -132,5 +133,52 @@ public class Main {
         }
 
         return false;
+    }
+
+    //2. Переделать проверку победы, чтобы она не была реализована просто набором условий,
+    //например, с использованием циклов.
+    //3. * Попробовать переписать логику проверки победы, чтобы она работала для поля 5х5 и количества фишек 4.
+    //Очень желательно не делать это просто набором условий для каждой из возможных ситуаций;
+    private static boolean isWinIntelligent(char symbol) {
+        int countBlocks = SIZE - COUNT_SYMBOLS + 1;
+
+        for (int i = 0; i < countBlocks; i++) {
+            for (int j = 0; j < countBlocks; j++) {
+                if (isWinDiagonal(symbol, i, j) || isWinLines(symbol, i, j)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isWinLines(char symbol, int shiftX, int shiftY) {
+        for (int i = shiftX; i < COUNT_SYMBOLS + shiftX; i++) {
+            boolean result = true;
+
+            for (int j = shiftY; j < COUNT_SYMBOLS + shiftY && result; j++) {
+                result = map[i][j] == symbol || map[j][i] == symbol;
+            }
+
+            if (result) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isWinDiagonal(char symbol, int shiftX, int shiftY) {
+        boolean result = true;
+
+        for (int i = 0; i < COUNT_SYMBOLS && result; i++) {
+            int shiftedX = i + shiftX;
+            int shiftedY = i + shiftY;
+
+            result = map[shiftedX][shiftedY] == symbol || map[COUNT_SYMBOLS - shiftedX - 1][shiftedY] == symbol;
+        }
+
+        return result;
     }
 }
